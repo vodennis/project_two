@@ -1,4 +1,3 @@
-// src/components/Flashcard.tsx
 import { useState } from 'react';
 import { Flashcard as FlashcardType } from '../types/flashcard';
 
@@ -9,24 +8,24 @@ interface FlashcardProps {
 
 const Flashcard: React.FC<FlashcardProps> = ({ card, onLevelChange }) => {
   const [flipped, setFlipped] = useState(false);
-  const [clickedButton, setClickedButton] = useState<string | null>(null); // Track clicked button
+  const [clickedButton, setClickedButton] = useState<string | null>(null);
 
   const handleFlip = () => {
     setFlipped(!flipped);
-    setClickedButton(null); // Reset clicked button on flip
+    setClickedButton(null); 
   };
 
   const handleUnderstanding = (difficulty: 'easy' | 'medium' | 'hard') => {
-    if (clickedButton) return; // Prevent multiple clicks
+    if (clickedButton) return; 
 
     let adjustment = 0;
     if (difficulty === 'easy') adjustment = 10;
     if (difficulty === 'hard') adjustment = -10;
 
-    const newLevel = Math.max(0, card.understanding_level + adjustment); // Prevent negative levels
+    const newLevel = Math.max(0, card.understanding_level + adjustment);
 
     onLevelChange(card.id, newLevel);
-    setClickedButton(difficulty); // Set the clicked button
+    setClickedButton(difficulty);
   };
 
   return (
@@ -40,7 +39,7 @@ const Flashcard: React.FC<FlashcardProps> = ({ card, onLevelChange }) => {
         </div>
         <div className="flip-card-back">
           <p className="text-lg font-semibold mb-2">Answer: {card.answer}</p>
-          <p className="text-sm mb-4">Understanding Level: {card.understanding_level}%</p> {/* Display for testing */}
+          <p className="text-sm mb-4">Understanding Level: {card.understanding_level}%</p>
           <div className="mt-auto flex justify-center gap-2">
             <button
               onClick={(e) => { e.stopPropagation(); handleUnderstanding('easy'); }}

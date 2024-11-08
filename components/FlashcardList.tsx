@@ -1,4 +1,3 @@
-// src/components/FlashcardList.tsx
 import { useState, useEffect } from 'react';
 import { Flashcard as FlashcardType } from '../types/flashcard';
 import Flashcard from './Flashcard';
@@ -10,7 +9,6 @@ const FlashcardList = () => {
 
   useEffect(() => {
     const fetchFlashcards = async () => {
-      // Fetch flashcards from MongoDB via the API endpoint
       const response = await fetch('/api/flashcards');
       const data = await response.json();
       setFlashcards(data);
@@ -24,14 +22,6 @@ const FlashcardList = () => {
         card.id === cardId ? { ...card, understanding_level: newLevel } : card
       )
     );
-  };
-
-  const addFlashcard = (newCard: FlashcardType) => {
-    setFlashcards((prevFlashcards) => {
-      const updatedFlashcards = [...prevFlashcards, newCard];
-      localStorage.setItem('flashcards', JSON.stringify(updatedFlashcards)); // Save to local storage
-      return updatedFlashcards;
-    });
   };
 
   const goToPreviousCard = () => {
@@ -51,7 +41,6 @@ const FlashcardList = () => {
             key={currentCardIndex}
             card={flashcards[currentCardIndex]}
             onLevelChange={handleLevelChange}
-            flipped={false}
           />
           <p className="text-gray-600 mt-2">
             Card {currentCardIndex + 1} of {flashcards.length}

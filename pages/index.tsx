@@ -1,4 +1,3 @@
-// src/pages/index.tsx
 import Head from 'next/head';
 import FlashcardList from '../components/FlashcardList';
 

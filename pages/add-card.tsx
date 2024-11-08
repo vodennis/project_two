@@ -1,4 +1,3 @@
-// src/pages/add-card.tsx
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -10,20 +9,7 @@ const AddCard = () => {
   const handleAddCard = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Temporary new card object with a default understanding level
-    const newCard = {
-      id: Date.now(), // Temporary unique ID based on timestamp
-      prompt,
-      answer,
-      understanding_level: 0,
-    };
-
-    // Add the new card to local storage for persistence within this session
-    const existingCards = JSON.parse(localStorage.getItem('flashcards') || '[]');
-    existingCards.push(newCard);
-    localStorage.setItem('flashcards', JSON.stringify(existingCards));
-
-    // Clear the form fields and navigate back to the home page
+    // Mock new card creation without saving to localStorage
     setPrompt('');
     setAnswer('');
     router.push('/');
