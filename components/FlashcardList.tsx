@@ -14,9 +14,9 @@ const FlashcardList = () => {
       const flashcardsCol = collection(db, 'flashcards');
       const flashcardsSnapshot = await getDocs(flashcardsCol);
       const flashcardsData = flashcardsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as unknown as FlashcardType),
+        ...(doc.data() as unknown as FlashcardType), // This will keep all other fields including id if it exists in data
       }));
+      
 
       setFlashcards(flashcardsData);
     };
