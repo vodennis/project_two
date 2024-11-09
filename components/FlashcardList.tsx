@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 import { Flashcard as FlashcardType } from '../types/flashcard';
 import Flashcard from './Flashcard';
 import Link from 'next/link';
@@ -9,9 +11,13 @@ const FlashcardList = () => {
 
   useEffect(() => {
     const fetchFlashcards = async () => {
-      const response = await fetch('/api/flashcards');
-      const data = await response.json();
-      setFlashcards(data);
+      const flashcardsCol = collection(db, 'flashcards');
+      const flashcardsSnapshot = await getDocs(flashcardsCol);
+      const flashcardsData = flashcardsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as FlashcardType[];
+      setFlashcards(flashcardsData);
     };
     fetchFlashcards();
   }, []);

@@ -15,7 +15,7 @@ const Flashcard: React.FC<FlashcardProps> = ({ card, onLevelChange }) => {
     setClickedButton(null); 
   };
 
-  const handleUnderstanding = (difficulty: 'easy' | 'medium' | 'hard') => {
+  const handleUnderstanding = async (difficulty: 'easy' | 'medium' | 'hard') => {
     if (clickedButton) return; 
 
     let adjustment = 0;
@@ -23,9 +23,18 @@ const Flashcard: React.FC<FlashcardProps> = ({ card, onLevelChange }) => {
     if (difficulty === 'hard') adjustment = -10;
 
     const newLevel = Math.max(0, card.understanding_level + adjustment);
-
     onLevelChange(card.id, newLevel);
     setClickedButton(difficulty);
+
+    try {
+      await fetch('/api/updateFlashcard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: card.id, understanding_level: newLevel }),
+      });
+    } catch (error) {
+      console.error('Error updating flashcard:', error);
+    }
   };
 
   return (

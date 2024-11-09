@@ -1,18 +1,17 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import clientPromise from '../../lib/mongodb';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req, res) {
   try {
-    const client = await clientPromise;
-    const db = client.db("flashcardsApp");
-
-    if (req.method === 'GET') {
-      const flashcards = await db.collection("flashcards").find({}).toArray();
-      res.status(200).json(flashcards);
-    } else {
-      res.status(405).end(); // Method Not Allowed
-    }
+    const flashcardsCol = collection(db, 'flashcards');
+    const flashcardsSnapshot = await getDocs(flashcardsCol);
+    const flashcards = flashcardsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    res.status(200).json(flashcards);
   } catch (error) {
-    res.status(500).json({ error: 'Database connection error' });
+    console.error('Error fetching flashcards:', error);
+    res.status(500).json({ error: 'Error fetching flashcards' });
   }
 }
