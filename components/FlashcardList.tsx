@@ -13,15 +13,10 @@ const FlashcardList = () => {
     const fetchFlashcards = async () => {
       const flashcardsCol = collection(db, 'flashcards');
       const flashcardsSnapshot = await getDocs(flashcardsCol);
-      const flashcardsData = flashcardsSnapshot.docs.map((doc) => {
-        const data = doc.data() as Partial<FlashcardType>;
-        return {
-          id: doc.id,
-          prompt: data.prompt || "No prompt available",
-          answer: data.answer || "No answer available",
-          understanding_level: data.understanding_level ?? 0,
-        } as FlashcardType;
-      });
+      const flashcardsData = flashcardsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as unknown as FlashcardType),
+      }));
 
       setFlashcards(flashcardsData);
     };
