@@ -9,14 +9,25 @@ const FlashcardList = () => {
   const [flashcards, setFlashcards] = useState<FlashcardType[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
+  const isFlashcardType = (data: any): data is FlashcardType => {
+    return (
+      typeof data.prompt === 'string' &&
+      typeof data.answer === 'string' &&
+      typeof data.understanding_level === 'number'
+    );
+  };
+
   useEffect(() => {
     const fetchFlashcards = async () => {
       const flashcardsCol = collection(db, 'flashcards');
       const flashcardsSnapshot = await getDocs(flashcardsCol);
-      const flashcardsData = flashcardsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as FlashcardType),
-      }));      
+      const flashcardsData = flashcardsSnapshot.docs
+        .map((doc) => {
+          const data = doc.data();
+          return isFlashcardType(data) ? { id: doc.id, ...data } : null;
+        })
+        .filter((card): card is FlashcardType => card !== null);
+
       setFlashcards(flashcardsData);
     };
     fetchFlashcards();
