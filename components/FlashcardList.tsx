@@ -15,8 +15,8 @@ const FlashcardList = () => {
       const flashcardsSnapshot = await getDocs(flashcardsCol);
       const flashcardsData = flashcardsSnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data(),
-      })) as FlashcardType[];
+        ...(doc.data() as FlashcardType),
+      }));      
       setFlashcards(flashcardsData);
     };
     fetchFlashcards();
