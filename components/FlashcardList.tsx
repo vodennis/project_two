@@ -9,24 +9,19 @@ const FlashcardList = () => {
   const [flashcards, setFlashcards] = useState<FlashcardType[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
-  const isFlashcardType = (data: any): data is FlashcardType => {
-    return (
-      typeof data.prompt === 'string' &&
-      typeof data.answer === 'string' &&
-      typeof data.understanding_level === 'number'
-    );
-  };
-
   useEffect(() => {
     const fetchFlashcards = async () => {
       const flashcardsCol = collection(db, 'flashcards');
       const flashcardsSnapshot = await getDocs(flashcardsCol);
-      const flashcardsData = flashcardsSnapshot.docs
-        .map((doc) => {
-          const data = doc.data();
-          return isFlashcardType(data) ? { id: doc.id, ...data } : null;
-        })
-        .filter((card): card is FlashcardType => card !== null);
+      const flashcardsData = flashcardsSnapshot.docs.map((doc) => {
+        const data = doc.data() as Partial<FlashcardType>;
+        return {
+          id: doc.id,
+          prompt: data.prompt || "No prompt available",
+          answer: data.answer || "No answer available",
+          understanding_level: data.understanding_level ?? 0,
+        } as FlashcardType;
+      });
 
       setFlashcards(flashcardsData);
     };
