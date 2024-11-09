@@ -1,7 +1,8 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { id, understanding_level } = req.body;
 
